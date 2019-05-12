@@ -27,6 +27,7 @@ class ArraySearchVSCoreDataRequestTests: BaseModelTest {
 
 				_ = try! context.fetch(fetchRequest)
 			}
+			self.report_memory(for: "testSearchBySingleRequest")
 		}
 	}
 	
@@ -43,6 +44,7 @@ class ArraySearchVSCoreDataRequestTests: BaseModelTest {
 				let searchIndex = String(Int.random(in: 1 ... 1000))
 				_ = allBlogs?.first(where: { $0.id == String(searchIndex) })
 			}
+			self.report_memory(for: "testSearchByArray")
 		}
 	}
 	
