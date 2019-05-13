@@ -8,7 +8,7 @@
 
 import XCTest
 import CoreData
-@testable import ArraySearchVSCoreDataRequest
+import ArraySearchVSCoreDataRequest
 
 class BaseModelTest: XCTestCase {
 	

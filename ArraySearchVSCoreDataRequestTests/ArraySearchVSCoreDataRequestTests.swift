@@ -8,7 +8,7 @@
 
 import XCTest
 import CoreData
-@testable import ArraySearchVSCoreDataRequest
+import ArraySearchVSCoreDataRequest
 
 class ArraySearchVSCoreDataRequestTests: BaseModelTest {
 	
@@ -37,9 +37,10 @@ class ArraySearchVSCoreDataRequestTests: BaseModelTest {
 		self.deleteAllEntries(context: context)
 		self.addDummyEntries(context: context)
 		
+        self.measure {
 		let allFetchRequest: NSFetchRequest<Blog> = Blog.fetchRequest()
 		let allBlogs: [Blog]? = try! context.fetch(allFetchRequest)
-		self.measure {
+		
 			for _ in 1 ... 100 {
 				let searchIndex = String(Int.random(in: 1 ... 1000))
 				_ = allBlogs?.first(where: { $0.id == String(searchIndex) })
@@ -48,6 +49,26 @@ class ArraySearchVSCoreDataRequestTests: BaseModelTest {
 		}
 	}
 	
+    func testSearchByDictionary() {
+        let context = self.container!.viewContext
+        
+        self.deleteAllEntries(context: context)
+        self.addDummyEntries(context: context)
+        
+        self.measure {
+            let allFetchRequest: NSFetchRequest<Blog> = Blog.fetchRequest()
+            let allBlogs: [Blog]? = try! context.fetch(allFetchRequest)
+            var allBlogDict: [String: Blog] = [:]
+            allBlogs?.forEach { allBlogDict[$0.id!] = $0 }
+        
+            for _ in 1 ... 100 {
+                let searchIndex = String(Int.random(in: 1 ... 1000))
+                _ = allBlogDict[String(searchIndex)]
+            }
+            self.report_memory(for: "testSearchByDictionary")
+        }
+    }
+    
 	private func randomString(length: Int) -> String {
 		let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 		return String((0..<length).map{ _ in letters.randomElement()! })
